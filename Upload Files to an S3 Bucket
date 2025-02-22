@@ -1,0 +1,5 @@
+#!/bin/bash 
+bucket_name="my-bucket-name" 
+file_path="/path/to/your/file"
+aws s3 cp $file_path s3://$bucket_name/
+echo "File uploaded to $bucket_name." 
