@@ -1,0 +1,12 @@
+#!/bin/bash 
+instances=$(aws ec2 describe-instances \ 
+  --filters "Name=instance-state-name,Values=running" \ 
+  --query "Reservations[*].Instances[*].InstanceId" \
+  --output text)
+
+if [ -n "$instances" ]; then
+  aws ec2 stop-instances --instance-ids $instances
+  echo "Stopped instances: $instances" 
+else
+  echo "No running instances found." 
+fi 
