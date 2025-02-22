@@ -1,0 +1,4 @@
+#!/bin/bash 
+bucket_name="my-unique-bucket-$(date +%s)"
+aws s3 mb s3://$bucket_name --region us-east-1 
+echo "S3 bucket $bucket_name created." 
