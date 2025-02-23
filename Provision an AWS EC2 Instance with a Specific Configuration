@@ -1,0 +1,16 @@
+#!/bin/bash
+instance_type="t2.micro"
+key_name="my-key" 
+security_group="sg-12345678"
+subnet_id="subnet-12345678"
+ami_id="ami-12345678"  
+
+aws ec2 run-instances \   
+  --image-id $ami_id \   
+  --count 1 \   
+  --instance-type $instance_type \  
+  --key-name $key_name \ 
+  --security-group-ids $security_group \   
+  --subnet-id $subnet_id \   
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=MyInstance}]'  
+echo "EC2 instance provisioned with type $instance_type." 
