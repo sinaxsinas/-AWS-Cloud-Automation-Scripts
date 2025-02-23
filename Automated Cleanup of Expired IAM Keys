@@ -1,0 +1,12 @@
+#!/bin/bash
+days=90
+
+aws iam list-users | jq -r '.Users[].UserName' | while read user; do 
+  aws iam list-access-keys --user-name $user | \ 
+  jq -r '.AccessKeyMetadata[] | select(.Status=="Active") | "\(.UserName) \(.AccessKeyId) \(.CreateDate)"' | while read uname key date; do  
+    if [ $(($(date +%s) - $(date -d "$date" +%s))) -gt $((days * 86400)) ]; then     
+      aws iam delete-access-key --user-name $uname --access-key-id $key      
+      echo "Deleted expired key $key for user $uname."  
+    fi    
+  done 
+done 
