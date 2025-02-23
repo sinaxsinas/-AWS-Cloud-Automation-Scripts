@@ -1,0 +1,21 @@
+#!/bin/bash 
+cpu_threshold=70 
+scale_up_count=2
+
+avg_cpu=$(aws cloudwatch get-metric-statistics \
+  --namespace AWS/EC2 \ 
+  --metric-name CPUUtilization \
+  --statistics Average \  
+  --period 300 \  
+  --start-time $(date -u -d '5 minutes ago' +%Y-%m-%dT%H:%M:%SZ) \    
+  --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ) \
+  --query 'Datapoints[0].Average' --output text) 
+
+if (( $(echo "$avg_cpu > $cpu_threshold" | bc -l) )); then 
+  echo "Scaling up by $scale_up_count instances."  
+  aws autoscaling set-desired-capacity \ 
+    --auto-scaling-group-name my-auto-scaling-group \  
+    --desired-capacity $((current_capacity + scale_up_count))
+else 
+   echo "No scaling needed. CPU usage is $avg_cpu%." 
+fi 
