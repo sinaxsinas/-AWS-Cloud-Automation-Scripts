@@ -1,0 +1,12 @@
+#!/bin/bash
+start_date="2025-01-01" 
+end_date="2025-01-31"
+output_file="aws_cost_report.csv" 
+
+aws ce get-cost-and-usage \   
+  --time-period Start=$start_date,End=$end_date \ 
+  --granularity MONTHLY \
+  --metrics "UnblendedCost" \ 
+  --output text > $output_file 
+
+echo "AWS cost report saved to $output_file." 
